@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NavBar } from "../components/NavBar";
 import Image from 'next/image'
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
     background: #EEF5FF;
@@ -106,6 +107,78 @@ const TextArea = styled.textarea`
 `
 
 export default function AddOperator(){
+
+    const [operator, setOperator] = useState('')
+    const [nameDirty, setNameDirty] = useState(false);
+    const [nameError, setNameError] = useState('Поле не может быть пустым1');
+
+    const [phone, setPhone] = useState('');
+    const [phoneDirty, setPhoneDirty] = useState(false);
+    const [phoneError, setPhoneError] = useState('Номер не может быть пустой.');
+
+
+    const [sum, setSum] = useState('');
+    const [sumDirty, setSumDirty] = useState(false);
+    const [sumError, setSumError] = useState('Строка не может быть пустой.');
+    const [formValid, setFormValid] = useState(false);
+    
+    useEffect(() => {
+        if(nameError||sumError|| phoneError) {
+           setFormValid(false)
+        }else{
+            setFormValid(true)
+        }
+    }, [nameError, phoneError, sumError])
+
+    const operatorHandler = (e:any) => {
+        setOperator(e.target.value)
+        if(((!e.target.value).toLowerCase())){
+            setPhoneError("Номер веден не верно")
+        }else{
+            setPhoneError('')
+        }
+    }
+
+    const phoneHandler = (e:any) => {
+        setPhone(e.target.value)
+        const re = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+        if(!re.test((e.target.value).toLowerCase())){
+            setPhoneError("Номер веден не верно")
+        }else{
+            setPhoneError('')
+        }
+    }
+
+    const sumHandler = (e:any) => {
+        setSum(e.target.value)
+        if (e.target.value < 1 || e.target.value > 1000)
+         {
+            setSumError("Сумма должна быть от 1 до 1000")
+            if (!e.target.value){
+                setSumError("Строка не может быть пустой.")
+            }
+        }else{
+            setSumError('')
+        }
+    
+    }
+
+    const blurHander = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+        switch (e.target.name) {
+            case 'sum':
+                setSumDirty(true)
+                break;
+            case 'phone':
+            setPhoneDirty(true)
+                break;
+            case 'operator':
+            setNameDirty(true)
+                break;
+        }
+    }
+
+
+
     return(
     <Wrapper>
         <Head>
@@ -130,21 +203,24 @@ export default function AddOperator(){
                         <TextLabel>
                             Название оператора
                         </TextLabel>
-                        <Input  />
+                        {(nameDirty && nameError) && <div style={{color: 'red'}}> {nameError}</div>}
+                        <Input onChange={e => operatorHandler(e)} value={operator} onBlur={e => blurHander(e)} name = 'operator' placeholder="Введите название оператора" />
                     </InputField>
                     <InputField>
                         <TextLabel>
                             Номер телефона
                         </TextLabel>
-                            <Input />
+                        {(phoneDirty && phoneError) && <div style={{color: 'red'}}> {phoneError}</div>}
+                            <Input onChange={e => phoneHandler(e)} value={phone} onBlur={e => blurHander(e)} placeholder="Введите номер" name = 'phone' type='number' />
                     </InputField>
                     <InputField>
                         <TextLabel>
                             Сумма пополнения
                         </TextLabel>
-                        <Input  />
+                        {(sumDirty && sumError) && <div style={{color: 'red'}}> {sumError}</div>}
+                        <Input onChange={e => sumHandler(e)} value={sum} onBlur={e => blurHander(e)} name= 'sum' type='number' placeholder="От 1 до 1000" />
                     </InputField>
-                    <FormBtn> Добавить</FormBtn>
+                    <FormBtn disabled = {!formValid}> Добавить</FormBtn>
                 </Form>
             </FormWrapper>
         </div>
