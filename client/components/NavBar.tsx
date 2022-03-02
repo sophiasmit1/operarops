@@ -52,7 +52,7 @@ export const NavBar = () => {
                         NEXT || BLOG
                     </Logo>
                     </Link>
-                    <Link href={"/add.opetator"}passHref>
+                    <Link href={"/add_operator"}passHref>
                     <AddPostBtn>
                         Добавить статью
                     </AddPostBtn>

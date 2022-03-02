@@ -20,7 +20,8 @@ const PostWraper = styled.div`
   flex-wrap: wrap;
   column-gap: 30px;
 `
-const Post = styled.a<IHeadingStyled>` 
+const Post = styled.a<IHeadingStyled>`
+  margin-left:50px;
   width: 220px;
   height: 180px;
   border-radius: 15px;
@@ -57,9 +58,23 @@ const Home: NextPage = () => {
       <NavBar />
       <PostWraper>
         <Link href={'/operator/test'}passHref>
-        <Post bgImage = '/static/MTS.svg'>
+        <Post bgImage = './static/MTS.png'>
         <PostTitle>
-          123
+          MTS
+        </PostTitle>
+        </Post>
+        </Link>
+        <Link href={'/operator/test'}passHref>
+        <Post bgImage = './static/biline.jpeg'>
+        <PostTitle>
+          Билайн
+        </PostTitle>
+        </Post>
+        </Link>
+        <Link href={'/operator/test'}passHref>
+        <Post bgImage = './static/megafon.png'>
+        <PostTitle>
+          Мегафон
         </PostTitle>
         </Post>
         </Link>
