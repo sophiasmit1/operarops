@@ -95,17 +95,6 @@ const FormBtn = styled.button`
     cursor: pointer;
 `
 
-const TextArea = styled.textarea`
-    border: 1px solid #E5E5E5;
-    box-sizing: border-box;
-    border-radius: 5px;
-    min-height: 150px;
-    resize: none;
-    outline: none;
-    padding: 5px 10px;
-    margin-bottom: 5px;
-`
-
 export default function AddOperator(){
 
     const [operator, setOperator] = useState('')
@@ -135,7 +124,7 @@ export default function AddOperator(){
         setOperator(e.target.value)
         const re = /^[a-zA-Z0-9]+$/;
         if(!re.test((e.target.value).toLowerCase())){
-            setNameError("Название оператора введено не верно")
+            setNameError("Используйте латинские буквы.")
         }else{
             setNameError('')
         }
