@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from "next/link"
-import Navbar from './components/NavBar'
+import { NavBar } from '../components/Navbar'
 
 
 const Home: NextPage = () => {
@@ -11,7 +11,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Terminals</title>
       </Head>
-      <Navbar />
+      <NavBar />
     </div>
   )
 }
