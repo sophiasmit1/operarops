@@ -4,6 +4,7 @@ import { NavBar } from "../components/NavBar";
 import Image from 'next/image'
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import React from "react";
 
 const Wrapper = styled.div`
     background: #EEF5FF;
@@ -97,6 +98,9 @@ const FormBtn = styled.button`
 
 export default function AddOperator(){
 
+
+    const [title, setTitle] = React.useState('')
+ 
     const [operator, setOperator] = useState('')
     const [nameDirty, setNameDirty] = useState(false);
     const [nameError, setNameError] = useState('Поле не может быть пустым1');
@@ -122,6 +126,7 @@ export default function AddOperator(){
 
     const operatorHandler = (e:any) => {
         setOperator(e.target.value)
+        setTitle(e.target.value)
         const re = /^[a-zA-Z0-9]+$/;
         if(!re.test((e.target.value).toLowerCase())){
             setNameError("Используйте латинские буквы.")
@@ -190,7 +195,7 @@ export default function AddOperator(){
           </BackBtn>
           </Link>
             <FormWrapper>
-                <Form onSubmit={e => e.preventDefault}>
+                <Form >
                     <InputField>
                         <TextLabel>
                             Название оператора
@@ -212,7 +217,7 @@ export default function AddOperator(){
                         {(sumDirty && sumError) && <div style={{color: 'red'}}> {sumError}</div>}
                         <Input onChange={e => sumHandler(e)} value={sum} onBlur={e => blurHander(e)} name= 'sum' type='number' placeholder="От 1 до 1000" />
                     </InputField>
-                    <FormBtn disabled = {!formValid}> Добавить</FormBtn>
+                    <FormBtn disabled = {!formValid} onClick={e => {e.preventDefault()}}> Добавить</FormBtn>
                 </Form>
             </FormWrapper>
         </div>

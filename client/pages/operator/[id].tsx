@@ -97,18 +97,7 @@ const FormBtn = styled.button`
     cursor: pointer;
 `
 
-export default function Operator({operator}:any){
-
-    const router = useRouter()
-    
-    const removePost = async () => {
-        await axios.post('http://localhost:5000/api/post/remove', {operatorId: operator._id})
-        .then(() => {
-            router.push('/')
-        })
-    }
-
-    if (!operator) {'Loading...'}
+export default function Operator(){
 
 
     const [phone, setPhone] = useState('');
@@ -170,7 +159,7 @@ export default function Operator({operator}:any){
     return(
         <Wrapper>
             <Head>
-                <title>{operator.title}</title>
+                <title>MTC</title>
             </Head>
             <NavBar />
             <div className="container">
@@ -189,7 +178,7 @@ export default function Operator({operator}:any){
                 <Form onSubmit={e => e.preventDefault}>
                     <InputField>
                         <TextLabel>
-                        {operator.title}
+                            MTC
                             </TextLabel>
                     </InputField>
                     <InputField>
@@ -213,21 +202,3 @@ export default function Operator({operator}:any){
         </Wrapper>
     )
 }
-
-
-
-export async function getServerSideProps(context: { query: { id: string; }; }) {
-    const res = await fetch('http://localhost:5000/api/post/' + context.query.id) 
-    const operator = await res.json()
-  
-    if (!operator) {
-      return{
-        notFount: true,
-      }
-    }
-  
-    return{
-      props: {operator}, 
-    }
-  
-  }
