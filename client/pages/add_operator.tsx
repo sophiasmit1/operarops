@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import React from "react";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const Wrapper = styled.div`
     background: #EEF5FF;
@@ -100,28 +102,32 @@ export default function AddOperator(){
 
 
     const [title, setTitle] = React.useState('')
+    const [imgUrl, setImgUrl] = React.useState('')
+    const router = useRouter()
+
+    const addOperator = async () =>{
+        try {
+            await axios.post('http://localhost:5000/api/operator/add', {
+                title, imgUrl
+            })
+            .then(() => router.push('/'))
+        } catch (error) {
+            console.log('3 проверка' + error)
+        }
+    }
  
     const [operator, setOperator] = useState('')
     const [nameDirty, setNameDirty] = useState(false);
     const [nameError, setNameError] = useState('Поле не может быть пустым1');
-
-    const [phone, setPhone] = useState('');
-    const [phoneDirty, setPhoneDirty] = useState(false);
-    const [phoneError, setPhoneError] = useState('Номер не может быть пустой.');
-
-
-    const [sum, setSum] = useState('');
-    const [sumDirty, setSumDirty] = useState(false);
-    const [sumError, setSumError] = useState('Строка не может быть пустой.');
     const [formValid, setFormValid] = useState(false);
     
     useEffect(() => {
-        if(nameError||sumError|| phoneError) {
+        if(nameError) {
            setFormValid(false)
         }else{
             setFormValid(true)
         }
-    }, [nameError, phoneError, sumError])
+    }, [nameError])
 
 
     const operatorHandler = (e:any) => {
@@ -135,41 +141,11 @@ export default function AddOperator(){
         }
     }
 
-    const phoneHandler = (e:any) => {
-        setPhone(e.target.value)
-        const re = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
-        if(!re.test((e.target.value).toLowerCase())){
-            setPhoneError("Номер веден не верно")
-        }else{
-            setPhoneError('')
-        }
-    }
-
-    const sumHandler = (e:any) => {
-        setSum(e.target.value)
-        if (e.target.value < 1 || e.target.value > 1000)
-         {
-            setSumError("Сумма должна быть от 1 до 1000")
-            if (!e.target.value){
-                setSumError("Строка не может быть пустой.")
-            }
-        }else{
-            setSumError('')
-        }
-    
-    }
-
     const blurHander = (e: React.FocusEvent<HTMLInputElement, Element>) => {
         switch (e.target.name) {
             case 'operator':
                 setNameDirty(true)
                  break;
-            case 'sum':
-                setSumDirty(true)
-                break;
-            case 'phone':
-            setPhoneDirty(true)
-                break;
 
         }
     }
@@ -205,19 +181,11 @@ export default function AddOperator(){
                     </InputField>
                     <InputField>
                         <TextLabel>
-                            Номер телефона
+                            Вставьте URL картинку оператора
                         </TextLabel>
-                        {(phoneDirty && phoneError) && <div style={{color: 'red'}}> {phoneError}</div>}
-                            <Input onChange={e => phoneHandler(e)} value={phone} onBlur={e => blurHander(e)} placeholder="Введите номер" name = 'phone' type='number' />
+                            <Input onChange={e =>setImgUrl(e.target.value)} placeholder="Вставьте URL картинку"/>
                     </InputField>
-                    <InputField>
-                        <TextLabel>
-                            Сумма пополнения
-                        </TextLabel>
-                        {(sumDirty && sumError) && <div style={{color: 'red'}}> {sumError}</div>}
-                        <Input onChange={e => sumHandler(e)} value={sum} onBlur={e => blurHander(e)} name= 'sum' type='number' placeholder="От 1 до 1000" />
-                    </InputField>
-                    <FormBtn disabled = {!formValid} onClick={e => {e.preventDefault()}}> Добавить</FormBtn>
+                    <FormBtn disabled = {!formValid} onClick={e => {e.preventDefault(); addOperator();}}> Добавить</FormBtn>
                 </Form>
             </FormWrapper>
         </div>

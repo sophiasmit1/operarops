@@ -49,12 +49,12 @@ export const NavBar = () => {
 
                     <Link href={"/"}passHref>
                     <Logo>
-                        NEXT || BLOG
+                        NEXT || SophiaSmit
                     </Logo>
                     </Link>
                     <Link href={"/add_operator"}passHref>
                     <AddPostBtn>
-                        Добавить статью
+                        Добавить оператора
                     </AddPostBtn>
                     </Link>
                     

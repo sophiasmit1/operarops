@@ -4,7 +4,7 @@ import styled from "styled-components"
 import { NavBar } from "../../components/NavBar"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
+import router, { useRouter } from "next/router"
 import axios from "axios"
 
 const Wrapper = styled.div`
@@ -96,9 +96,37 @@ const FormBtn = styled.button`
     margin-top: 15px;
     cursor: pointer;
 `
+const RemovePostBtn = styled.a`
+    font-style: normal;
+    font-weight: 300;
+    font-size:14px;
+    line-height:15px;
+    color: #FFFFFF;
+    background: #E85050;
+    box-shadow: 0px 10px 25 px rgba (148, 147, 213, 0.15);
+    border-radius: 10px;
+    position: absolute;
+    top: 440px;
+    width: 150px;
+    height:25px;
+    left:50%;
+    bottom: -15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%);
+    cursor: pointer;
+`
+export default function Operator({operators}:any){
 
-export default function Operator(){
+    const removeOperator = async () => {
+        await axios.post('http://localhost:5000/api/operator/remove', {operatorsId: operators._id})
+        .then(() => {
+            router.push('/')
+        })
+    }
 
+    if (!operators) 'Loading...'
 
     const [phone, setPhone] = useState('');
     const [phoneDirty, setPhoneDirty] = useState(false);
@@ -159,7 +187,7 @@ export default function Operator(){
     return(
         <Wrapper>
             <Head>
-                <title>MTC</title>
+                <title>{operators.title}</title>
             </Head>
             <NavBar />
             <div className="container">
@@ -178,7 +206,7 @@ export default function Operator(){
                 <Form onSubmit={e => e.preventDefault}>
                     <InputField>
                         <TextLabel>
-                            MTC
+                        {operators.title}
                             </TextLabel>
                     </InputField>
                     <InputField>
@@ -195,6 +223,7 @@ export default function Operator(){
                         {(sumDirty && sumError) && <div style={{color: 'red'}}> {sumError}</div>}
                         <Input onChange={e => sumHandler(e)} value={sum} onBlur={e => blurHander(e)} name= 'sum' type='number' placeholder="От 1 до 1000" />
                     </InputField>
+                    <RemovePostBtn onClick={removeOperator}>Удалить оператора</RemovePostBtn>
                     <FormBtn disabled = {!formValid} onClick={() => alert('Оплата прошла успешно!')}> Добавить</FormBtn>
                 </Form>
             </FormWrapper>
@@ -202,3 +231,21 @@ export default function Operator(){
         </Wrapper>
     )
 }
+
+
+
+export async function getServerSideProps(context: { query: { id: string; }; }) {
+    const res = await fetch('http://localhost:5000/api/operator/' + context.query.id)
+    const operators = await res.json()
+  
+    if (!operators) {
+      return{
+        notFount: true,
+      }
+    }
+  
+    return{
+      props: {operators}, 
+    }
+  
+  }

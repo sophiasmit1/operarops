@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from "next/link"
+import { ReactChild, ReactFragment, ReactPortal, Key } from 'react'
 import styled from 'styled-components'
 import { NavBar } from '../components/NavBar'
 
@@ -49,7 +50,8 @@ const PostTitle = styled.div`
   border-radius: 0px 0px 15px 15px;
   `
 
-const Home: NextPage = () => {
+const Home: NextPage = ({operators}:any) => {
+  if (!operators) 'Loading...'
   return (
     <Wrapper>
       <Head>
@@ -57,30 +59,40 @@ const Home: NextPage = () => {
       </Head>
       <NavBar />
       <PostWraper>
-        <Link href={'/operator/test'}passHref>
-        <Post bgImage = './static/MTS.png'>
-        <PostTitle>
-          MTS
-        </PostTitle>
-        </Post>
-        </Link>
-        <Link href={'/operator/test'}passHref>
-        <Post bgImage = './static/biline.jpeg'>
-        <PostTitle>
-          Билайн
-        </PostTitle>
-        </Post>
-        </Link>
-        <Link href={'/operator/test'}passHref>
-        <Post bgImage = './static/megafon.png'>
-        <PostTitle>
-          Мегафон
-        </PostTitle>
-        </Post>
-        </Link>
+
+        {
+          operators.map((operators: { _id: any, imgUrl: string; title: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined }, idx: Key | null | undefined) => {
+            return(
+              <Link href={'/operator/[id]'}  as = {'operator/'+ operators._id}passHref key={idx}>
+              <Post bgImage = {operators.imgUrl}>
+              <PostTitle>
+                {operators.title}
+              </PostTitle>
+              </Post>
+              </Link>
+            )
+          })
+        }
       </PostWraper>
     </Wrapper>
   )
 }
 
+
 export default Home
+
+export async function getServerSideProps() {
+  const res = await fetch('http://localhost:5000/api/operator')
+  const operators = await res.json()
+
+  if (!operators) {
+    return{
+      notFount: true,
+    }
+  }
+
+  return{
+    props: {operators}, 
+  }
+
+}
