@@ -130,12 +130,14 @@ export default function AddOperator(){
         }
     }, [nameError, phoneError, sumError])
 
+
     const operatorHandler = (e:any) => {
         setOperator(e.target.value)
-        if(((!e.target.value).toLowerCase())){
-            setPhoneError("Номер веден не верно")
+        const re = /^[a-zA-Z0-9]+$/;
+        if(!re.test((e.target.value).toLowerCase())){
+            setNameError("Название оператора введено не верно")
         }else{
-            setPhoneError('')
+            setNameError('')
         }
     }
 
@@ -165,15 +167,16 @@ export default function AddOperator(){
 
     const blurHander = (e: React.FocusEvent<HTMLInputElement, Element>) => {
         switch (e.target.name) {
+            case 'operator':
+                setNameDirty(true)
+                 break;
             case 'sum':
                 setSumDirty(true)
                 break;
             case 'phone':
             setPhoneDirty(true)
                 break;
-            case 'operator':
-            setNameDirty(true)
-                break;
+
         }
     }
 
@@ -204,7 +207,7 @@ export default function AddOperator(){
                             Название оператора
                         </TextLabel>
                         {(nameDirty && nameError) && <div style={{color: 'red'}}> {nameError}</div>}
-                        <Input onChange={e => operatorHandler(e)} value={operator} onBlur={e => blurHander(e)} name = 'operator' placeholder="Введите название оператора" />
+                        <Input onChange={e => operatorHandler(e)} value={operator} onBlur={e => blurHander(e)} name = 'operator' placeholder="Введите название оператора" type = 'string' />
                     </InputField>
                     <InputField>
                         <TextLabel>
